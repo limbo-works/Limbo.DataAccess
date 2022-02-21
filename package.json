@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "scripts": {
+    "release": "standard-version"
+  },
+  "devdependencies": {
+    "standard-version": "^9.3.2"
+  }
+}
