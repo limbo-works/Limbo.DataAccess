@@ -3,7 +3,7 @@
   "scripts": {
     "release": "standard-version"
   },
-  "devdependencies": {
+  "devDependencies": {
     "standard-version": "^9.3.2"
   }
 }
