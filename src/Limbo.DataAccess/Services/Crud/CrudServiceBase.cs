@@ -8,6 +8,7 @@ using Limbo.DataAccess.Repositories;
 using Limbo.DataAccess.Models;
 using Limbo.DataAccess.Services.Models;
 using System.Linq;
+using Limbo.DataAccess.Settings;
 
 namespace Limbo.DataAccess.Services.Crud {
     /// <inheritdoc/>
@@ -20,55 +21,92 @@ namespace Limbo.DataAccess.Services.Crud {
         protected readonly TRepository repository;
 
         /// <summary>
+        /// The settings for data access
+        /// </summary>
+        protected readonly DataAccessSettings dataAccessSettings;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="logger"></param>
-        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger) : base(repository, logger) {
+        /// <param name="dataAccessSettings"></param>
+        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, DataAccessSettings dataAccessSettings) : base(repository, logger) {
             this.repository = repository;
+            this.dataAccessSettings = dataAccessSettings;
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IServiceResponse<TDomain>> Add(TDomain entity) {
+        public virtual async Task<IServiceResponse<TDomain>> Add(TDomain entity, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
                 return await repository.AddAsync(entity);
-            }, HttpStatusCode.Created, IsolationLevel.Snapshot);
+            }, HttpStatusCode.Created, isolationLevel);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IServiceResponse<TDomain>> DeleteById(int id) {
+        public async Task<IServiceResponse<TDomain>> Add(TDomain entity) {
+            return await Add(entity, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<IServiceResponse<TDomain>> DeleteById(int id, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask<TDomain>(async () => {
                 await repository.DeleteByIdAsync(id);
-                return null;
-            }, HttpStatusCode.NoContent, IsolationLevel.Snapshot);
+                return new TDomain();
+            }, HttpStatusCode.NoContent, isolationLevel);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IServiceResponse<IEnumerable<TDomain>>> GetAll() {
+        public async Task<IServiceResponse<TDomain>> DeleteById(int id) {
+            return await DeleteById(id, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<IServiceResponse<IEnumerable<TDomain>>> GetAll(IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
                 return await repository.GetAllAsync();
-            }, HttpStatusCode.OK, IsolationLevel.Snapshot);
+            }, HttpStatusCode.OK, isolationLevel);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IServiceResponse<TDomain>> GetById(int id) {
+        public async Task<IServiceResponse<IEnumerable<TDomain>>> GetAll() {
+            return await GetAll(dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<IServiceResponse<TDomain>> GetById(int id, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
                 return await repository.GetByIdAsync(id);
-            }, HttpStatusCode.OK, IsolationLevel.Snapshot);
+            }, HttpStatusCode.OK, isolationLevel);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IServiceResponse<IQueryable<TDomain>>> QueryDbSet(IsolationLevel isolationLevel = IsolationLevel.Snapshot) {
+        public async Task<IServiceResponse<TDomain>> GetById(int id) {
+            return await GetById(id, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<IServiceResponse<IQueryable<TDomain>>> QueryDbSet(IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
                 return await repository.QueryDbSet();
             }, HttpStatusCode.OK, isolationLevel);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IServiceResponse<TDomain>> Update(TDomain entity) {
+        public async Task<IServiceResponse<IQueryable<TDomain>>> QueryDbSet() {
+            return await QueryDbSet(dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<IServiceResponse<TDomain>> Update(TDomain entity, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
                 return await Task.Run(() => repository.Update(entity));
-            }, HttpStatusCode.OK, IsolationLevel.Snapshot);
+            }, HttpStatusCode.OK, isolationLevel);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IServiceResponse<TDomain>> Update(TDomain entity) {
+            return await Update(entity, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
     }
 }

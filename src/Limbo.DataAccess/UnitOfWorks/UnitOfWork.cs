@@ -10,7 +10,7 @@ namespace Limbo.DataAccess.UnitOfWorks {
     public class UnitOfWork<TRepository> : IUnitOfWork<TRepository>
         where TRepository : IDbRepositoryBase {
         private readonly DbContext _context;
-        private IDbContextTransaction _transaction;
+        private IDbContextTransaction? _transaction;
 
         /// <summary>
         /// Constructor

@@ -9,7 +9,7 @@ namespace Limbo.DataAccess.Services.Models {
         /// <summary>
         /// The value of an action
         /// </summary>
-        T ReponseValue { get; set; }
+        T? ReponseValue { get; set; }
 
         /// <summary>
         /// The associated http status code

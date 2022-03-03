@@ -33,7 +33,7 @@ namespace Limbo.DataAccess.Services {
         /// <param name="statusCode"></param>
         /// <param name="IsolationLevel"></param>
         /// <returns></returns>
-        protected virtual async Task<IServiceResponse<TDomain>> ExecuteServiceTask<TDomain>(Func<Task<TDomain>> func, HttpStatusCode statusCode, IsolationLevel IsolationLevel)
+        protected virtual async Task<IServiceResponse<TDomain>> ExecuteServiceTask<TDomain>(Func<Task<TDomain?>> func, HttpStatusCode statusCode, IsolationLevel IsolationLevel)
             where TDomain : class {
             try {
                 await BeginUnitOfWorkAsync(IsolationLevel);
