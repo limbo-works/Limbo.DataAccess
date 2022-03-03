@@ -44,7 +44,7 @@ namespace Limbo.DataAccess.Services.Crud {
         }
 
         /// <inheritdoc/>
-        public async Task<IServiceResponse<TDomain>> Add(TDomain entity) {
+        public virtual async Task<IServiceResponse<TDomain>> Add(TDomain entity) {
             return await Add(entity, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
 
@@ -57,7 +57,7 @@ namespace Limbo.DataAccess.Services.Crud {
         }
 
         /// <inheritdoc/>
-        public async Task<IServiceResponse<TDomain>> DeleteById(int id) {
+        public virtual async Task<IServiceResponse<TDomain>> DeleteById(int id) {
             return await DeleteById(id, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
 
@@ -69,7 +69,7 @@ namespace Limbo.DataAccess.Services.Crud {
         }
 
         /// <inheritdoc/>
-        public async Task<IServiceResponse<IEnumerable<TDomain>>> GetAll() {
+        public virtual async Task<IServiceResponse<IEnumerable<TDomain>>> GetAll() {
             return await GetAll(dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
 
@@ -81,7 +81,7 @@ namespace Limbo.DataAccess.Services.Crud {
         }
 
         /// <inheritdoc/>
-        public async Task<IServiceResponse<TDomain>> GetById(int id) {
+        public virtual async Task<IServiceResponse<TDomain>> GetById(int id) {
             return await GetById(id, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
 
@@ -93,7 +93,7 @@ namespace Limbo.DataAccess.Services.Crud {
         }
 
         /// <inheritdoc/>
-        public async Task<IServiceResponse<IQueryable<TDomain>>> QueryDbSet() {
+        public virtual async Task<IServiceResponse<IQueryable<TDomain>>> QueryDbSet() {
             return await QueryDbSet(dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
 
@@ -105,7 +105,7 @@ namespace Limbo.DataAccess.Services.Crud {
         }
 
         /// <inheritdoc/>
-        public async Task<IServiceResponse<TDomain>> Update(TDomain entity) {
+        public virtual async Task<IServiceResponse<TDomain>> Update(TDomain entity) {
             return await Update(entity, dataAccessSettings.DefaultIsolationLevel).ConfigureAwait(false);
         }
     }
