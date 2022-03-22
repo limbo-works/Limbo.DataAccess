@@ -35,7 +35,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
         public virtual async Task<TDomain> AddAsync(TDomain entity) {
             try {
                 dbSet.Attach(entity);
-                var createdEntity = await dbSet.AddAsync(entity);
+                var createdEntity = await dbSet.AddAsync(entity).ConfigureAwait(false);
                 return createdEntity.Entity;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed while adding {typeof(TDomain)}");
@@ -59,7 +59,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TDomain>> GetAllAsync() {
             try {
-                return await dbSet.ToListAsync();
+                return await dbSet.ToListAsync().ConfigureAwait(false);
             } catch (Exception e) {
                 logger.LogError(e, $"Failed getting all {typeof(TDomain)}");
                 throw new TaskCanceledException("Task failed");
@@ -69,7 +69,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
         /// <inheritdoc/>
         public virtual async Task<TDomain?> GetByIdAsync(int id) {
             try {
-                return await dbSet.FindAsync(id);
+                return await dbSet.FindAsync(id).ConfigureAwait(false);
             } catch (Exception e) {
                 logger.LogError(e, $"Failed on GetById with {typeof(TDomain)} with id {id}");
                 throw new TaskCanceledException("Task failed");
@@ -114,8 +114,9 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 if (domain == null) {
                     throw new ArgumentException("Id must reference a valid entity", nameof(id));
                 }
-                var collection = collectionIds.Where(itemId => !collectionKeySelector(domain).Any(item => item.Id == itemId)).Select(itemId => new TCollectionItemType { Id = itemId });
-                collectionKeySelector(domain).AddRange(collection);
+                var collection = collectionIds.Where(itemId => !collectionKeySelector(domain).Any(item => item.Id == itemId));
+                var loadedCollection = GetDBContext().Set<TCollectionItemType>().Where(item => collection.Any(id => id == item.Id));
+                collectionKeySelector(domain).AddRange(loadedCollection);
                 return domain;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed while adding collection {typeof(List<TCollectionItemType>)} to {typeof(TDomain)}");
