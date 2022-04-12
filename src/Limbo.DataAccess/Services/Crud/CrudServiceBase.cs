@@ -28,7 +28,7 @@ namespace Limbo.DataAccess.Services.Crud {
         protected readonly DataAccessSettings dataAccessSettings;
 
         /// <inheritdoc/>
-        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, DataAccessSettings dataAccessSettings, IUnitOfWork<TRepository> unitOfWork) : base(logger, unitOfWork) {
+        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, DataAccessSettings dataAccessSettings, IUnitOfWork<TRepository> unitOfWork) : base(logger, unitOfWork, repository) {
             this.repository = repository;
             this.dataAccessSettings = dataAccessSettings;
         }

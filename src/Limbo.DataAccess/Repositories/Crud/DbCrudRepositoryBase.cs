@@ -134,12 +134,13 @@ namespace Limbo.DataAccess.Repositories.Crud {
         protected virtual async Task<TDomain> RemoveFromCollection<TCollectionItemType>(int id, int[] collectionIds, Expression<Func<TDomain, List<TCollectionItemType>>> collectionKeySelector)
             where TCollectionItemType : class, GenericId, new() {
             try {
+                Func<TDomain, List<TCollectionItemType>> compiledCollectionKeySelector = collectionKeySelector.Compile();
                 var domain = await dbSet.Include(collectionKeySelector).FirstOrDefaultAsync(item => item.Id == id);
                 if (domain == null) {
                     throw new ArgumentException("Id must reference a valid entity", nameof(id));
                 }
                 var collection = collectionIds.Select(itemId => new TCollectionItemType { Id = itemId });
-                collectionKeySelector.Compile()(domain).RemoveAll(collectionItem => collection.Any(c => c.Id == collectionItem.Id));
+                compiledCollectionKeySelector(domain).RemoveAll(collectionItem => collection.Any(c => c.Id == collectionItem.Id));
                 return domain;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed while removing collection {typeof(List<TCollectionItemType>)} from {typeof(TDomain)}");

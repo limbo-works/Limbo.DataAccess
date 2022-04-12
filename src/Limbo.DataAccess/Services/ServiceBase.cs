@@ -28,9 +28,11 @@ namespace Limbo.DataAccess.Services {
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="unitOfWork"></param>
-        protected ServiceBase(ILogger<ServiceBase<TRepository>> logger, IUnitOfWork<TRepository> unitOfWork) {
+        /// <param name="repository"></param>
+        protected ServiceBase(ILogger<ServiceBase<TRepository>> logger, IUnitOfWork<TRepository> unitOfWork, TRepository repository) {
             Logger = logger;
             UnitOfWork = unitOfWork;
+            UnitOfWork.SetDbContext(repository);
         }
 
         /// <summary>

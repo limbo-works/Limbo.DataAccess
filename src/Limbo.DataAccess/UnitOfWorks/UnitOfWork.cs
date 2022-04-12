@@ -11,14 +11,18 @@ namespace Limbo.DataAccess.UnitOfWorks {
     public class UnitOfWork<TRepository> : IUnitOfWork<TRepository>
         where TRepository : IDbRepositoryBase<DbContext> {
 
-        private readonly DbContext _context;
+        private DbContext? _context;
         private IDbContextTransaction? _transaction;
         private readonly ILogger<UnitOfWork<TRepository>> _logger;
 
         /// <inheritdoc/>
-        public UnitOfWork(TRepository repository, ILogger<UnitOfWork<TRepository>> logger) {
-            _context = repository.GetDBContext();
+        public UnitOfWork(ILogger<UnitOfWork<TRepository>> logger) {
             _logger = logger;
+        }
+
+        /// <inheritdoc/>
+        public void SetDbContext(TRepository repository) {
+            _context = repository.GetDBContext();
         }
 
         /// <inheritdoc/>
@@ -28,6 +32,9 @@ namespace Limbo.DataAccess.UnitOfWorks {
                 _logger.LogError(exception, "Cannot open new transaction while current transaction is not closed");
                 throw exception;
             } else {
+                if (_context == null) {
+                    throw new NullReferenceException("DbContext cannot be null");
+                }
                 _transaction = await _context.Database.BeginTransactionAsync(IsolationLevel);
             }
         }
@@ -41,6 +48,9 @@ namespace Limbo.DataAccess.UnitOfWorks {
         public async Task CommitUnitOfWorkAsync() {
             if (_transaction != null) {
                 try {
+                    if(_context == null) {
+                        throw new NullReferenceException("DbContext cannot be null");
+                    }
                     _context.SaveChanges();
                     await _transaction.CommitAsync();
                 } catch (Exception ex) {
@@ -51,7 +61,7 @@ namespace Limbo.DataAccess.UnitOfWorks {
                 await _transaction.DisposeAsync();
                 _transaction = null;
             } else {
-                throw new ArgumentNullException("_transtaction", "_transtaction cannot be null");
+                throw new NullReferenceException("Transtaction cannot be null");
             }
         }
 

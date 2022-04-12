@@ -34,5 +34,11 @@ namespace Limbo.DataAccess.UnitOfWorks {
         /// </summary>
         /// <returns></returns>
         Task CommitUnitOfWorkAsync();
+
+        /// <summary>
+        /// Sets the dbContext of the unit of work
+        /// </summary>
+        /// <param name="repository"></param>
+        void SetDbContext(TRepository repository);
     }
 }
