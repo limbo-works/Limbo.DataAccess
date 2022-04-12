@@ -48,7 +48,7 @@ namespace Limbo.DataAccess.UnitOfWorks {
         public async Task CommitUnitOfWorkAsync() {
             if (_transaction != null) {
                 try {
-                    if(_context == null) {
+                    if (_context == null) {
                         throw new NullReferenceException("DbContext cannot be null");
                     }
                     _context.SaveChanges();
