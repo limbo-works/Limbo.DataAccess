@@ -6,6 +6,7 @@ using Limbo.DataAccess.Models;
 using Limbo.DataAccess.Repositories;
 using Limbo.DataAccess.Repositories.Crud;
 using Limbo.DataAccess.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Limbo.DataAccess.Services.Crud {
     /// <summary>
@@ -15,7 +16,7 @@ namespace Limbo.DataAccess.Services.Crud {
     /// <typeparam name="TRepository"></typeparam>
     public interface ICrudServiceBase<TDomain, TRepository> : IServiceBase<TRepository>
         where TDomain : class, GenericId, new()
-        where TRepository : IDbRepositoryBase, IDbCrudRepositoryBase<TDomain> {
+        where TRepository : IDbRepositoryBase<DbContext>, IDbCrudRepositoryBase<TDomain> {
         /// <summary>
         /// Queries the dbset
         /// </summary>

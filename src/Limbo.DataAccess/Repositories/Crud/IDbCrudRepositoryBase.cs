@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Limbo.DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Limbo.DataAccess.Repositories.Crud {
     /// <summary>
     /// A generic repository for interacting with a database
     /// </summary>
     /// <typeparam name="TDomain"></typeparam>
-    public interface IDbCrudRepositoryBase<TDomain> : IDbRepositoryBase
+    public interface IDbCrudRepositoryBase<TDomain> : IDbRepositoryBase<DbContext>
         where TDomain : class, GenericId, new() {
         /// <summary>
         /// Queries the dbset

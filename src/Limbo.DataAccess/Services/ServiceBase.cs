@@ -6,23 +6,31 @@ using Microsoft.Extensions.Logging;
 using Limbo.DataAccess.UnitOfWorks;
 using Limbo.DataAccess.Repositories;
 using Limbo.DataAccess.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Limbo.DataAccess.Services {
     /// <inheritdoc/>
-    public abstract class ServiceBase<TRepository> : UnitOfWork<TRepository>, IServiceBase<TRepository>
-        where TRepository : IDbRepositoryBase {
+    public abstract class ServiceBase<TRepository> : IServiceBase<TRepository>
+        where TRepository : IDbRepositoryBase<DbContext> {
+
         /// <summary>
         /// The logger
         /// </summary>
         protected ILogger<ServiceBase<TRepository>> Logger { get; }
 
         /// <summary>
+        /// The unit of work
+        /// </summary>
+        protected IUnitOfWork<TRepository> UnitOfWork { get; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="repository"></param>
         /// <param name="logger"></param>
-        protected ServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger) : base(repository) {
+        /// <param name="unitOfWork"></param>
+        protected ServiceBase(ILogger<ServiceBase<TRepository>> logger, IUnitOfWork<TRepository> unitOfWork) {
             Logger = logger;
+            UnitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -36,12 +44,13 @@ namespace Limbo.DataAccess.Services {
         protected virtual async Task<IServiceResponse<TDomain>> ExecuteServiceTask<TDomain>(Func<Task<TDomain?>> func, HttpStatusCode statusCode, IsolationLevel IsolationLevel)
             where TDomain : class {
             try {
-                await BeginUnitOfWorkAsync(IsolationLevel);
+                await UnitOfWork.BeginUnitOfWorkAsync(IsolationLevel);
                 var response = await func.Invoke().ConfigureAwait(false);
-                await CommitUnitOfWorkAsync();
+                await UnitOfWork.CommitUnitOfWorkAsync();
                 return new ServiceResponse<TDomain>(statusCode, response);
             } catch (Exception ex) {
-                Logger.LogError(ex, $"Task failed with {typeof(TDomain)}");
+                Logger.LogError(ex, $"Service task failed with {typeof(TDomain)}");
+                await UnitOfWork.CloseUnitOfWork();
                 return new ServiceResponse<TDomain>(HttpStatusCode.InternalServerError, null);
             }
         }

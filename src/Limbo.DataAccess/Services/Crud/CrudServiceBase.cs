@@ -9,12 +9,14 @@ using Limbo.DataAccess.Models;
 using Limbo.DataAccess.Services.Models;
 using System.Linq;
 using Limbo.DataAccess.Settings;
+using Limbo.DataAccess.UnitOfWorks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Limbo.DataAccess.Services.Crud {
     /// <inheritdoc/>
     public abstract class CrudServiceBase<TDomain, TRepository> : ServiceBase<TRepository>, ICrudServiceBase<TDomain, TRepository>
         where TDomain : class, GenericId, new()
-        where TRepository : IDbRepositoryBase, IDbCrudRepositoryBase<TDomain> {
+        where TRepository : IDbRepositoryBase<DbContext>, IDbCrudRepositoryBase<TDomain> {
         /// <summary>
         /// The repository
         /// </summary>
@@ -25,13 +27,8 @@ namespace Limbo.DataAccess.Services.Crud {
         /// </summary>
         protected readonly DataAccessSettings dataAccessSettings;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="logger"></param>
-        /// <param name="dataAccessSettings"></param>
-        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, DataAccessSettings dataAccessSettings) : base(repository, logger) {
+        /// <inheritdoc/>
+        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, DataAccessSettings dataAccessSettings, IUnitOfWork<TRepository> unitOfWork) : base(logger, unitOfWork) {
             this.repository = repository;
             this.dataAccessSettings = dataAccessSettings;
         }

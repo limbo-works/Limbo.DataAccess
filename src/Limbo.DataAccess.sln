@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Limbo.DataAccess.Tests", "Limbo.DataAccess.Tests\Limbo.DataAccess.Tests.csproj", "{AC17F64A-4540-4D1D-9EF0-93A6F85B1782}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Limbo.DataAccess.TestBase", "Limbo.DataAccess.TestBase\Limbo.DataAccess.TestBase.csproj", "{18A77CF4-485C-4005-A55D-2E38B437B0A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{E8EFDC6A-6B67-4DBA-BEB6-49E7A1B0A6C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8EFDC6A-6B67-4DBA-BEB6-49E7A1B0A6C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8EFDC6A-6B67-4DBA-BEB6-49E7A1B0A6C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC17F64A-4540-4D1D-9EF0-93A6F85B1782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC17F64A-4540-4D1D-9EF0-93A6F85B1782}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC17F64A-4540-4D1D-9EF0-93A6F85B1782}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC17F64A-4540-4D1D-9EF0-93A6F85B1782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18A77CF4-485C-4005-A55D-2E38B437B0A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18A77CF4-485C-4005-A55D-2E38B437B0A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18A77CF4-485C-4005-A55D-2E38B437B0A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18A77CF4-485C-4005-A55D-2E38B437B0A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

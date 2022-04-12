@@ -1,12 +1,13 @@
 ﻿using Limbo.DataAccess.Settings.Extensions;
+using Limbo.DataAccess.UnitOfWorks.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Limbo.DataAccess.Extensions {
-    /// <summary>
-    /// Extensions
-    /// </summary>
+
+    /// <inheritdoc/>
     public static class DataAccessExtensions {
+
         /// <summary>
         /// Adds services for data access
         /// </summary>
@@ -26,7 +27,8 @@ namespace Limbo.DataAccess.Extensions {
         /// <returns></returns>
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration, string configurationSection) {
             services
-                .AddSettings(configuration, configurationSection);
+                .AddSettings(configuration, configurationSection)
+                .AddUnitOfWorks();
 
             return services;
         }

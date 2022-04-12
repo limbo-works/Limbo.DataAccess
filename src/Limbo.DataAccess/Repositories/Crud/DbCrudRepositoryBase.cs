@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Limbo.DataAccess.Contexts.Models;
 using Limbo.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Limbo.DataAccess.Repositories.Crud {
     /// <inheritdoc/>
-    public class DbCrudRepositoryBase<TDomain> : DbRepositoryBase, IDbCrudRepositoryBase<TDomain>
+    public class DbCrudRepositoryBase<TDomain> : DbRepositoryBase<DbContext>, IDbCrudRepositoryBase<TDomain>
         where TDomain : class, GenericId, new() {
+
         /// <summary>
         /// The logger
         /// </summary>
@@ -21,13 +22,9 @@ namespace Limbo.DataAccess.Repositories.Crud {
         /// </summary>
         protected readonly DbSet<TDomain> dbSet;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="logger"></param>
-        protected DbCrudRepositoryBase(IDbContext dbContext, ILogger<DbCrudRepositoryBase<TDomain>> logger) : base(dbContext) {
-            dbSet = dbContext.Context.Set<TDomain>();
+        /// <inheritdoc/>
+        protected DbCrudRepositoryBase(IDbContextFactory<DbContext> contextFactory, ILogger<DbCrudRepositoryBase<TDomain>> logger) : base(contextFactory) {
+            dbSet = GetDBContext().Set<TDomain>();
             this.logger = logger;
         }
 
@@ -39,7 +36,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 return createdEntity.Entity;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed while adding {typeof(TDomain)}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
 
@@ -52,7 +49,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 }
             } catch (Exception e) {
                 logger.LogError(e, $"Failed on Delete with {typeof(TDomain)}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
 
@@ -62,7 +59,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 return await dbSet.ToListAsync().ConfigureAwait(false);
             } catch (Exception e) {
                 logger.LogError(e, $"Failed getting all {typeof(TDomain)}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
 
@@ -72,7 +69,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 return await dbSet.FindAsync(id).ConfigureAwait(false);
             } catch (Exception e) {
                 logger.LogError(e, $"Failed on GetById with {typeof(TDomain)} with id {id}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
 
@@ -82,7 +79,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 return await Task.FromResult(dbSet).ConfigureAwait(false);
             } catch (Exception e) {
                 logger.LogError(e, $"Failed query {typeof(TDomain)}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
 
@@ -94,7 +91,7 @@ namespace Limbo.DataAccess.Repositories.Crud {
                 return updatedEntity.Entity;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed on Update with {typeof(TDomain)}");
-                throw new ArgumentException("Failed updating entity");
+                throw new ArgumentException("Failed updating entity", e);
             }
         }
 
@@ -107,20 +104,21 @@ namespace Limbo.DataAccess.Repositories.Crud {
         /// <param name="collectionKeySelector"></param>
         /// <returns></returns>
         /// <exception cref="TaskCanceledException"></exception>
-        protected virtual async Task<TDomain> AddToCollection<TCollectionItemType>(int id, int[] collectionIds, Func<TDomain, List<TCollectionItemType>> collectionKeySelector)
+        protected virtual async Task<TDomain> AddToCollection<TCollectionItemType>(int id, int[] collectionIds, Expression<Func<TDomain, List<TCollectionItemType>>> collectionKeySelector)
             where TCollectionItemType : class, GenericId, new() {
             try {
-                var domain = await GetByIdAsync(id).ConfigureAwait(false);
+                Func<TDomain, List<TCollectionItemType>> compiledCollectionKeySelector = collectionKeySelector.Compile();
+                var domain = await dbSet.Include(collectionKeySelector).FirstOrDefaultAsync(item => item.Id == id);
                 if (domain == null) {
                     throw new ArgumentException("Id must reference a valid entity", nameof(id));
                 }
-                var collection = collectionIds.Where(itemId => !collectionKeySelector(domain).Any(item => item.Id == itemId));
+                var collection = collectionIds.Where(itemId => !compiledCollectionKeySelector(domain).Any(item => item.Id == itemId));
                 var loadedCollection = GetDBContext().Set<TCollectionItemType>().Where(item => collection.Any(id => id == item.Id));
-                collectionKeySelector(domain).AddRange(loadedCollection);
+                compiledCollectionKeySelector(domain).AddRange(loadedCollection);
                 return domain;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed while adding collection {typeof(List<TCollectionItemType>)} to {typeof(TDomain)}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
 
@@ -133,19 +131,19 @@ namespace Limbo.DataAccess.Repositories.Crud {
         /// <param name="collectionKeySelector"></param>
         /// <returns></returns>
         /// <exception cref="TaskCanceledException"></exception>
-        protected virtual async Task<TDomain> RemoveFromCollection<TCollectionItemType>(int id, int[] collectionIds, Func<TDomain, List<TCollectionItemType>> collectionKeySelector)
+        protected virtual async Task<TDomain> RemoveFromCollection<TCollectionItemType>(int id, int[] collectionIds, Expression<Func<TDomain, List<TCollectionItemType>>> collectionKeySelector)
             where TCollectionItemType : class, GenericId, new() {
             try {
-                var domain = await GetByIdAsync(id).ConfigureAwait(false);
+                var domain = await dbSet.Include(collectionKeySelector).FirstOrDefaultAsync(item => item.Id == id);
                 if (domain == null) {
                     throw new ArgumentException("Id must reference a valid entity", nameof(id));
                 }
                 var collection = collectionIds.Select(itemId => new TCollectionItemType { Id = itemId });
-                collectionKeySelector(domain).RemoveAll(collectionItem => collection.Any(c => c.Id == collectionItem.Id));
+                collectionKeySelector.Compile()(domain).RemoveAll(collectionItem => collection.Any(c => c.Id == collectionItem.Id));
                 return domain;
             } catch (Exception e) {
                 logger.LogError(e, $"Failed while removing collection {typeof(List<TCollectionItemType>)} from {typeof(TDomain)}");
-                throw new TaskCanceledException("Task failed");
+                throw new TaskCanceledException("Task failed", e);
             }
         }
     }

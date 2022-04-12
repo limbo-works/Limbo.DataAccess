@@ -1,22 +1,29 @@
-﻿using Limbo.DataAccess.Contexts.Models;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace Limbo.DataAccess.Repositories {
     /// <inheritdoc/>
-    public abstract class DbRepositoryBase : IDbRepositoryBase {
-        private readonly DbContext _context;
+    public abstract class DbRepositoryBase<TDbContext> : IDbRepositoryBase<TDbContext>
+        where TDbContext : DbContext {
+        private readonly IDbContextFactory<TDbContext> _contextFactory;
+        private TDbContext? _context;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="context"></param>
-        protected DbRepositoryBase(IDbContext context) {
-            _context = context.Context;
+        /// <inheritdoc/>
+        protected DbRepositoryBase(IDbContextFactory<TDbContext> contextFactory) {
+            _contextFactory = contextFactory;
         }
 
         /// <inheritdoc/>
-        public virtual DbContext GetDBContext() {
-            return _context;
+        public virtual TDbContext GetDBContext() {
+            if (_context == null) {
+                _context = _contextFactory.CreateDbContext();
+                if (_context == null) {
+                    throw new NullReferenceException("DbContext wasn't created.");
+                }
+                return _context;
+            } else {
+                return _context;
+            }
         }
     }
 }

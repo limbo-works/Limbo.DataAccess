@@ -1,12 +1,12 @@
 ﻿using Limbo.DataAccess.Repositories;
-using Limbo.DataAccess.UnitOfWorks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Limbo.DataAccess.Services {
     /// <summary>
     /// A base for defining a service
     /// </summary>
     /// <typeparam name="TRepository"></typeparam>
-    public interface IServiceBase<TRepository> : IUnitOfWork<TRepository>
-        where TRepository : IDbRepositoryBase {
+    public interface IServiceBase<TRepository>
+        where TRepository : IDbRepositoryBase<DbContext> {
     }
 }
