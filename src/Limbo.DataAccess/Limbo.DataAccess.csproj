@@ -28,7 +28,7 @@
 	<!-- Generate XML documentation -->
 	<PropertyGroup>
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-		<Version>2.0.0-dev06</Version>
+		<Version>2.0.0-dev07</Version>
 		<Authors>nikcio</Authors>
 		<Company>Limbo</Company>
 		<Description>Generic models for interacting with EF Core</Description>

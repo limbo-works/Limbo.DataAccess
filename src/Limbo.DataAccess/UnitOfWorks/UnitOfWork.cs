@@ -21,12 +21,12 @@ namespace Limbo.DataAccess.UnitOfWorks {
         }
 
         /// <inheritdoc/>
-        public void SetDbContext(TRepository repository) {
+        public virtual void SetDbContext(TRepository repository) {
             _context = repository.GetDBContext();
         }
 
         /// <inheritdoc/>
-        public async Task BeginUnitOfWorkAsync(IsolationLevel IsolationLevel) {
+        public virtual async Task BeginUnitOfWorkAsync(IsolationLevel IsolationLevel) {
             if (_transaction != null) {
                 var exception = new InvalidOperationException("Cannot open new transaction while current transaction is not closed");
                 _logger.LogError(exception, "Cannot open new transaction while current transaction is not closed");
@@ -40,12 +40,12 @@ namespace Limbo.DataAccess.UnitOfWorks {
         }
 
         /// <inheritdoc/>
-        public Task BeginUnitOfWorkAsync() {
+        public virtual Task BeginUnitOfWorkAsync() {
             return BeginUnitOfWorkAsync(IsolationLevel.Serializable);
         }
 
         /// <inheritdoc/>
-        public async Task CommitUnitOfWorkAsync() {
+        public virtual async Task CommitUnitOfWorkAsync() {
             if (_transaction != null) {
                 try {
                     if (_context == null) {
@@ -66,7 +66,7 @@ namespace Limbo.DataAccess.UnitOfWorks {
         }
 
         /// <inheritdoc/>
-        public async Task CloseUnitOfWork() {
+        public virtual async Task CloseUnitOfWork() {
             if (_transaction != null) {
                 try {
                     await _transaction.RollbackAsync();
