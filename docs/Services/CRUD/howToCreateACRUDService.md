@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MyNamespace.Services {
     public class MyService : CrudServiceBase<MyModel, IMyRepository>, IMyService {
-        public MyService(IMyRepository repository, ILogger<ServiceBase<IMyRepository>> logger) : base(repository, logger) {
+        public MyService(IMyRepository repository, ILogger<ServiceBase<IMyRepository>> logger, DataAccessSettings dataAccessSettings, IUnitOfWork<TRepository> unitOfWork) : base(repository, logger) {
         }
     }
 }

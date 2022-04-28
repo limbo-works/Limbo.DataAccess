@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MyNamespace.Repositories {
     public class MyRepository : DbCrudRepositoryBase<MyModel>, IMyRepository {
-        public MyRepository(IMyContext dbContext, ILogger<DbCrudRepositoryBase<MyModel>> logger) : base(dbContext, logger) {
+        public MyRepository(IDbContextFactory<MyDbContext> contextFactory, ILogger<DbCrudRepositoryBase<MyModel>> logger) : base(dbContext, logger) {
         }
     }
 }
@@ -16,7 +16,7 @@ namespace MyNamespace.Repositories {
 using Limbo.DataAccess.Repositories.Crud;
 
 namespace MyNamespace.Repositories {
-    public interface IAMyRepository : IDbCrudRepositoryBase<MyModel> {
+    public interface IMyRepository : IDbCrudRepositoryBase<MyModel> {
     }
 }
 ```

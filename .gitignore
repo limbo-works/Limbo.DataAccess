@@ -24,8 +24,8 @@ mono_crash.*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
+# [Rr]elease/
+# [Rr]eleases/
 x64/
 x86/
 [Ww][Ii][Nn]32/
@@ -198,9 +198,9 @@ publish/
 PublishScripts/
 
 # NuGet Packages
-*.nupkg
-# NuGet Symbol Packages
-*.snupkg
+# *.nupkg
+# # NuGet Symbol Packages
+# *.snupkg
 # The packages folder can be ignored because of Package Restore
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
@@ -785,5 +785,3 @@ $RECYCLE.BIN/
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,node,csharp,visualstudio,visualstudiocode
-
-!releases/**/*.nupkg
