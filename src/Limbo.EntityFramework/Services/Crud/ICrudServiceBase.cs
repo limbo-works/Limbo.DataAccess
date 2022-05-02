@@ -15,7 +15,7 @@ namespace Limbo.EntityFramework.Services.Crud {
     /// <typeparam name="TDomain"></typeparam>
     /// <typeparam name="TRepository"></typeparam>
     public interface ICrudServiceBase<TDomain, TRepository> : IServiceBase<TRepository>
-        where TDomain : class, GenericId, new()
+        where TDomain : class, IGenericId, new()
         where TRepository : IDbRepositoryBase<DbContext>, IDbCrudRepositoryBase<TDomain> {
         /// <summary>
         /// Queries the dbset

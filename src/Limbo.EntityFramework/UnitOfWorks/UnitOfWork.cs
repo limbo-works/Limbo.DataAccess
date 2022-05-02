@@ -22,7 +22,7 @@ namespace Limbo.EntityFramework.UnitOfWorks {
 
         /// <inheritdoc/>
         public virtual void SetDbContext(TRepository repository) {
-            _context = repository.GetDBContext();
+            _context = repository.GetDbContext();
         }
 
         /// <inheritdoc/>

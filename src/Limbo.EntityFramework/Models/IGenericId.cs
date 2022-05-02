@@ -2,7 +2,7 @@
     /// <summary>
     /// A generic interface for defining a Id
     /// </summary>
-    public interface GenericId {
+    public interface IGenericId {
         /// <summary>
         /// The id
         /// </summary>

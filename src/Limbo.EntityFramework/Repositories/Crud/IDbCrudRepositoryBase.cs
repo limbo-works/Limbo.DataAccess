@@ -10,7 +10,7 @@ namespace Limbo.EntityFramework.Repositories.Crud {
     /// </summary>
     /// <typeparam name="TDomain"></typeparam>
     public interface IDbCrudRepositoryBase<TDomain> : IDbRepositoryBase<DbContext>
-        where TDomain : class, GenericId, new() {
+        where TDomain : class, IGenericId, new() {
         /// <summary>
         /// Queries the dbset
         /// </summary>

@@ -14,7 +14,7 @@ namespace Limbo.EntityFramework.Repositories {
         }
 
         /// <inheritdoc/>
-        public virtual TDbContext GetDBContext() {
+        public virtual TDbContext GetDbContext() {
             if (_context == null) {
                 _context = _contextFactory.CreateDbContext();
                 if (_context == null) {

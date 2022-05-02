@@ -15,12 +15,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Limbo.EntityFramework.Services.Crud {
     /// <inheritdoc/>
     public abstract class CrudServiceBase<TDomain, TRepository> : ServiceBase<TRepository>, ICrudServiceBase<TDomain, TRepository>
-        where TDomain : class, GenericId, new()
+        where TDomain : class, IGenericId, new()
         where TRepository : IDbRepositoryBase<DbContext>, IDbCrudRepositoryBase<TDomain> {
         /// <summary>
         /// The repository
         /// </summary>
-        protected readonly TRepository repository;
+        protected readonly TRepository Repository;
 
         /// <summary>
         /// The settings for data access
@@ -29,14 +29,14 @@ namespace Limbo.EntityFramework.Services.Crud {
 
         /// <inheritdoc/>
         protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, EntityFrameworkSettings EntityFrameworkSettings, IUnitOfWork<TRepository> unitOfWork) : base(logger, unitOfWork, repository) {
-            this.repository = repository;
+            this.Repository = repository;
             this.EntityFrameworkSettings = EntityFrameworkSettings;
         }
 
         /// <inheritdoc/>
         public virtual async Task<IServiceResponse<TDomain>> Add(TDomain entity, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
-                return await repository.AddAsync(entity);
+                return await Repository.AddAsync(entity);
             }, HttpStatusCode.Created, isolationLevel);
         }
 
@@ -48,7 +48,7 @@ namespace Limbo.EntityFramework.Services.Crud {
         /// <inheritdoc/>
         public virtual async Task<IServiceResponse<TDomain>> DeleteById(int id, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask<TDomain>(async () => {
-                await repository.DeleteByIdAsync(id);
+                await Repository.DeleteByIdAsync(id);
                 return new TDomain();
             }, HttpStatusCode.NoContent, isolationLevel);
         }
@@ -61,7 +61,7 @@ namespace Limbo.EntityFramework.Services.Crud {
         /// <inheritdoc/>
         public virtual async Task<IServiceResponse<IEnumerable<TDomain>>> GetAll(IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
-                return await repository.GetAllAsync();
+                return await Repository.GetAllAsync();
             }, HttpStatusCode.OK, isolationLevel);
         }
 
@@ -73,7 +73,7 @@ namespace Limbo.EntityFramework.Services.Crud {
         /// <inheritdoc/>
         public virtual async Task<IServiceResponse<TDomain>> GetById(int id, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
-                return await repository.GetByIdAsync(id);
+                return await Repository.GetByIdAsync(id);
             }, HttpStatusCode.OK, isolationLevel);
         }
 
@@ -85,7 +85,7 @@ namespace Limbo.EntityFramework.Services.Crud {
         /// <inheritdoc/>
         public virtual async Task<IServiceResponse<IQueryable<TDomain>>> QueryDbSet(IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
-                return await repository.QueryDbSet();
+                return await Repository.QueryDbSet();
             }, HttpStatusCode.OK, isolationLevel);
         }
 
@@ -97,7 +97,7 @@ namespace Limbo.EntityFramework.Services.Crud {
         /// <inheritdoc/>
         public virtual async Task<IServiceResponse<TDomain>> Update(TDomain entity, IsolationLevel isolationLevel) {
             return await ExecuteServiceTask(async () => {
-                return await Task.Run(() => repository.Update(entity));
+                return await Task.Run(() => Repository.Update(entity));
             }, HttpStatusCode.OK, isolationLevel);
         }
 

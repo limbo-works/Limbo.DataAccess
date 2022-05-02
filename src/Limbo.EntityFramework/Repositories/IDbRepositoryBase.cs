@@ -10,6 +10,6 @@ namespace Limbo.EntityFramework.Repositories {
         /// Gets the db context
         /// </summary>
         /// <returns></returns>
-        TDbContext GetDBContext();
+        TDbContext GetDbContext();
     }
 }
