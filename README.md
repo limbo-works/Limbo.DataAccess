@@ -3,9 +3,9 @@ Generic models for interacting with EF Core
 
 ## Content
 
-- Install
-- Description
-- Documentation
+- [Install](#install)
+- [Description](#description)
+- [Documentation](#documentation)
 
 ### Install
 
