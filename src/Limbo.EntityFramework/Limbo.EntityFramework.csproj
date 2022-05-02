@@ -1,43 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\Limbo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<PropertyGroup>
+		<Version>2.0.0-beta001</Version>
+		<Company>Limbo</Company>
+		<Authors>nikcio</Authors>
+		<Copyright>Copyright © 2022</Copyright>
+		<Description>Generic models for interacting with EF Core.</Description>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.16" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.16">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-  </ItemGroup>
+	<!-- Information for the NuGet package -->
+	<PropertyGroup>
+		<PackageId>Limbo.EntityFramework</PackageId>
+		<PackageTags>efcore;aspnetcore</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/limbo-works/Limbo.EntityFramework</PackageProjectUrl>
+		<PackageIcon>Limbo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/limbo-works/Limbo.EntityFramework</RepositoryUrl>
+	</PropertyGroup>
 
-
+	<!-- Include NuGet dependencies -->
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.16" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.16">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+	</ItemGroup>
+	
 	<!-- Generate XML documentation -->
 	<PropertyGroup>
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-		<Version>2.0.0-beta001</Version>
-		<Authors>nikcio</Authors>
-		<Company>Limbo</Company>
-		<Description>Generic models for interacting with EF Core</Description>
-		<PackageProjectUrl>https://github.com/limbo-works/Limbo.EntityFramework</PackageProjectUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/limbo-works/Limbo.EntityFramework</RepositoryUrl>
-		<PackageTags>efcore;aspnetcore</PackageTags>
-		<PackageIcon>Limbo.png</PackageIcon>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<!-- Include package icon and readme file for the NuGet package -->
+	<ItemGroup>
+		<None Include="..\..\Limbo.png" Pack="true" PackagePath="\" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
 </Project>
