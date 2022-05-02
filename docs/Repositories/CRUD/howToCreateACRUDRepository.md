@@ -1,7 +1,7 @@
 # How to create a CRUD repository
 
 ```csharp
-using Limbo.DataAccess.Repositories.Crud;
+using Limbo.EntityFramework.Repositories.Crud;
 using Microsoft.Extensions.Logging;
 
 namespace MyNamespace.Repositories {
@@ -13,7 +13,7 @@ namespace MyNamespace.Repositories {
 ```
 
 ```csharp
-using Limbo.DataAccess.Repositories.Crud;
+using Limbo.EntityFramework.Repositories.Crud;
 
 namespace MyNamespace.Repositories {
     public interface IMyRepository : IDbCrudRepositoryBase<MyModel> {

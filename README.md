@@ -1,4 +1,4 @@
-# Limbo.DataAccess
+# Limbo.EntityFramework
 Generic models for interacting with EF Core
 
 ## Content
@@ -10,7 +10,7 @@ Generic models for interacting with EF Core
 ### Install
 
 ```
-dotnet add package Limbo.DataAccess
+dotnet add package Limbo.EntityFramework
 ```
 
 ### Description
