@@ -28,9 +28,9 @@ namespace Limbo.EntityFramework.Services.Crud {
         protected readonly EntityFrameworkSettings EntityFrameworkSettings;
 
         /// <inheritdoc/>
-        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, EntityFrameworkSettings EntityFrameworkSettings, IUnitOfWork<TRepository> unitOfWork) : base(logger, unitOfWork, repository) {
+        protected CrudServiceBase(TRepository repository, ILogger<ServiceBase<TRepository>> logger, EntityFrameworkSettings entityFrameworkSettings, IUnitOfWork<TRepository> unitOfWork) : base(logger, unitOfWork, repository) {
             this.Repository = repository;
-            this.EntityFrameworkSettings = EntityFrameworkSettings;
+            this.EntityFrameworkSettings = entityFrameworkSettings;
         }
 
         /// <inheritdoc/>

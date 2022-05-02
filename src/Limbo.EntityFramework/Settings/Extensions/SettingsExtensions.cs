@@ -14,10 +14,10 @@ namespace Limbo.EntityFramework.Settings.Extensions {
         /// <param name="settingsOptions"></param>
         /// <returns></returns>
         public static IServiceCollection AddSettings(this IServiceCollection services, SettingsOptions settingsOptions) {
-            var EntityFrameworkSettings = new EntityFrameworkSettings();
-            settingsOptions.Configuration.Bind(settingsOptions.ConfigurationSection, EntityFrameworkSettings);
+            var entityFrameworkSettings = new EntityFrameworkSettings();
+            settingsOptions.Configuration.Bind(settingsOptions.ConfigurationSection, entityFrameworkSettings);
             services
-                .AddSingleton(EntityFrameworkSettings);
+                .AddSingleton(entityFrameworkSettings);
 
             return services;
         }

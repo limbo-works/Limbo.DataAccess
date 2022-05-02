@@ -19,9 +19,9 @@ namespace Limbo.EntityFramework.UnitOfWorks {
         /// <summary>
         /// Begins a unit of work opreation
         /// </summary>
-        /// <param name="IsolationLevel"></param>
+        /// <param name="isolationLevel"></param>
         /// <returns></returns>
-        Task BeginUnitOfWorkAsync(IsolationLevel IsolationLevel);
+        Task BeginUnitOfWorkAsync(IsolationLevel isolationLevel);
 
         /// <summary>
         /// Closes a unit of work in case of a faulty execution

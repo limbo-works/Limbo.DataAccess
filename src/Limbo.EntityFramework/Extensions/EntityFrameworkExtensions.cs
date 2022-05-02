@@ -15,11 +15,11 @@ namespace Limbo.EntityFramework.Extensions {
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        /// <param name="EntityFrameworkOptions"></param>
+        /// <param name="entityFrameworkOptions"></param>
         /// <returns></returns>
-        public static IServiceCollection AddEntityFramework(this IServiceCollection services, IConfiguration configuration, Action<EntityFrameworkOptions> EntityFrameworkOptions) {
+        public static IServiceCollection AddEntityFramework(this IServiceCollection services, IConfiguration configuration, Action<EntityFrameworkOptions> entityFrameworkOptions) {
             var options = new EntityFrameworkOptions(configuration);
-            EntityFrameworkOptions(options);
+            entityFrameworkOptions(options);
             return AddEntityFramework(services, options);
         }
 
@@ -27,11 +27,11 @@ namespace Limbo.EntityFramework.Extensions {
         /// Adds services for data access
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="EntityFrameworkOptions"></param>
+        /// <param name="entityFrameworkOptions"></param>
         /// <returns></returns>
-        public static IServiceCollection AddEntityFramework(this IServiceCollection services, EntityFrameworkOptions EntityFrameworkOptions) {
+        public static IServiceCollection AddEntityFramework(this IServiceCollection services, EntityFrameworkOptions entityFrameworkOptions) {
             services
-                .AddSettings(EntityFrameworkOptions.SettingsOptions)
+                .AddSettings(entityFrameworkOptions.SettingsOptions)
                 .AddUnitOfWorks();
 
             return services;

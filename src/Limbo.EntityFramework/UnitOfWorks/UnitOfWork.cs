@@ -26,7 +26,7 @@ namespace Limbo.EntityFramework.UnitOfWorks {
         }
 
         /// <inheritdoc/>
-        public virtual async Task BeginUnitOfWorkAsync(IsolationLevel IsolationLevel) {
+        public virtual async Task BeginUnitOfWorkAsync(IsolationLevel isolationLevel) {
             if (_transaction != null) {
                 var exception = new InvalidOperationException("Cannot open new transaction while current transaction is not closed");
                 _logger.LogError(exception, "Cannot open new transaction while current transaction is not closed");
@@ -35,7 +35,7 @@ namespace Limbo.EntityFramework.UnitOfWorks {
                 if (_context == null) {
                     throw new NullReferenceException("DbContext cannot be null");
                 }
-                _transaction = await _context.Database.BeginTransactionAsync(IsolationLevel);
+                _transaction = await _context.Database.BeginTransactionAsync(isolationLevel);
             }
         }
 
